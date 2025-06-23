@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>H₂SO₄ Dilution Calculator (by % Input)</title>
+  <title>Sulfuric Acid Dilution Calc</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,6 +13,12 @@
     h2 {
       border-bottom: 2px solid #444;
       padding-bottom: 5px;
+    }
+    .subheading {
+      font-weight: normal;
+      font-size: 1rem;
+      margin-top: -10px;
+      color: #666;
     }
     label {
       display: block;
@@ -34,6 +40,10 @@
       border: 1px solid #ccc;
       background-color: #f4f4f4;
     }
+    .result small {
+      font-size: 0.9em;
+      color: #333;
+    }
     button {
       margin-top: 20px;
       padding: 10px 20px;
@@ -47,15 +57,16 @@
   </style>
 </head>
 <body>
-  <h2>Empty: Sulfuric Acid Dilution Calculator</h2>
+  <h2>Sulfuric Acid Dilution Calc</h2>
+  <div class="subheading">Empty IBC</div>
 
   <label>Final Volume (V₂ in L)</label>
   <input type="number" id="v2" value="1000">
 
-  <label>Stock Acid Strength (%) <span class="note">e.g. 97</span></label>
+  <label>Concentrated Acid Strength (%) <span class="note">e.g. 97</span></label>
   <input type="number" id="p1" value="97">
 
-  <label>Stock Acid Density (g/mL) <span class="note">e.g. 1.84</span></label>
+  <label>Concentrated Acid Density (g/mL) <span class="note">e.g. 1.84</span></label>
   <input type="number" step="0.001" id="d1" value="1.84">
 
   <label>Target Acid Strength (%) <span class="note">e.g. 15</span></label>
@@ -73,10 +84,10 @@
       const MW = 98.08;
 
       const V2 = parseFloat(document.getElementById("v2").value);
-      const P1 = parseFloat(document.getElementById("p1").value); // 97
-      const D1 = parseFloat(document.getElementById("d1").value); // 1.84
-      const P2 = parseFloat(document.getElementById("p2").value); // 15
-      const D2 = parseFloat(document.getElementById("d2").value); // 1.106
+      const P1 = parseFloat(document.getElementById("p1").value);
+      const D1 = parseFloat(document.getElementById("d1").value);
+      const P2 = parseFloat(document.getElementById("p2").value);
+      const D2 = parseFloat(document.getElementById("d2").value);
 
       if ([V2, P1, D1, P2, D2].some(v => isNaN(v) || v <= 0)) {
         document.getElementById("output").innerHTML = "<strong>Please enter valid, positive numbers.</strong>";
@@ -95,13 +106,13 @@
       const VH2O = V2 - V1;
 
       document.getElementById("output").innerHTML = `
-        <strong>Calculated Molarities:</strong><br>
+        <small><strong>Calculated Molarities:</strong><br>
         C₁ = ${C1.toFixed(2)} M (from ${P1}% @ ${D1} g/mL)<br>
-        C₂ = ${C2.toFixed(2)} M (from ${P2}% @ ${D2} g/mL)<br><br>
+        C₂ = ${C2.toFixed(2)} M (from ${P2}% @ ${D2} g/mL)</small><br><br>
 
-        <strong>Required Volumes:</strong><br>
-        Volume of 97% H₂SO₄ to add (V₁): <strong>${V1.toFixed(2)} L</strong><br>
-        Volume of Water: <strong>${VH2O.toFixed(2)} L</strong>
+        <strong>REQUIRED VOLUMES:</strong><br>
+        V₁ = ${V1.toFixed(2)} L (${P1}% H₂SO₄)<br>
+        V = ${VH2O.toFixed(2)} L water
       `;
     }
   </script>

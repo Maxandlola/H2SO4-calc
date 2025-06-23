@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>⚗️ Reagent Mixing/Make-up Calculator</title>
+  <title>Reagent Mixing/Make-up Calculator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -26,11 +26,10 @@
       font-weight: bold;
       display: block;
     }
-    input, select {
+    input {
       padding: 6px;
       margin-top: 5px;
-      width: 250px;
-      font-size: 16px;
+      width: 200px;
     }
     .form-grid {
       display: grid;
@@ -67,53 +66,36 @@
       background-color: #4CAF50;
       color: white;
       border: none;
-      cursor: pointer;
     }
-    button:hover {
-      background-color: #45a049;
-    }
-    hr {
-      margin: 50px 0;
-      border: 1px solid #ccc;
-    }
-    @media print {
-      button, input, select, a {
-        display: none;
-      }
+    select {
+      padding: 6px;
+      font-size: 16px;
+      width: 250px;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
 
-<h1 style="margin-top: 10px;">⚗️ Reagent Mixing/Make-up Calculator</h1>
+<h1>Reagent Mixing/Make-up Calculator</h1>
 
 <label for="reagentSelect"><strong>Reagent:</strong></label>
 <select id="reagentSelect" onchange="toggleReagent()">
   <option value="sulfuric">Sulfuric Acid</option>
   <option value="caustic">Caustic (NaOH)</option>
 </select>
-<div id="sdsLink" style="margin-top: 10px;"></div>
 
-<script>
-function toggleReagent() {
-  const reagent = document.getElementById("reagentSelect").value;
-  document.getElementById("sulfuricBlock").style.display = reagent === "sulfuric" ? "block" : "none";
-  document.getElementById("causticBlock").style.display = reagent === "caustic" ? "block" : "none";
+<div id="secondaryCausticSelect" style="display:none;">
+  <label for="causticCalcSelect"><strong>Caustic Calculation Type:</strong></label>
+  <select id="causticCalcSelect" onchange="toggleCausticCalc()">
+    <option value="causticDilution">Caustic Dilution</option>
+    <option value="topUp">Top-Up (Too Dilute Correction)</option>
+    <option value="dilution">Dilution (Too Concentrated)</option>
+  </select>
+</div>
 
-  const sdsDiv = document.getElementById("sdsLink");
-  if (reagent === "sulfuric") {
-    sdsDiv.innerHTML = '<a href="SULPHURIC_ACID_98%_SDS.pdf" target="_blank">📄 View Sulfuric Acid SDS</a>';
-  } else if (reagent === "caustic") {
-    sdsDiv.innerHTML = '<a href="NaOH 45%_ SDS.pdf" target="_blank">📄 View Caustic (NaOH) SDS</a>';
-  }
-}
-
-// Call once on load
-window.onload = toggleReagent;
-</script>
-
-<!-- Placeholder blocks for content -->
-<div id="sulfuricBlock" style="display:none;">
+<!-- Sulfuric Block -->
+<div id="sulfuricBlock">
   <h2>Sulfuric Acid Dilution Calc</h2>
   <div class="subheading">Empty IBC</div>
   <label>Final Volume (V in L)</label>
@@ -140,74 +122,90 @@ window.onload = toggleReagent;
   <div class="result" id="output"></div>
 </div>
 
+<!-- Caustic Sections -->
 <div id="causticBlock" style="display:none;">
-  <h2>Caustic Dilution Calc</h2>
-  <div class="subheading">Make-up from empty or an existing volume</div>
-  <div class="form-grid">
-    <div class="input-box">
-      <label>2860-TNK-01 Level (Final) [L]</label>
-      <input type="number" id="hhLevel" value="2000">
-    </div>
-    <div class="input-box">
-      <label>2860-TNK-01 Current Level [L]</label>
-      <input type="number" id="currentLevel" value="800">
-    </div>
-    <div class="input-box">
-      <label>Target NaOH Strength (M)</label>
-      <input type="number" id="targetStrength" value="1.1">
-    </div>
-    <div class="input-box">
-      <label>Conc. NaOH (45%) [M]</label>
-      <input type="number" id="concStrength" value="14">
-    </div>
-  </div>
-  <button onclick="calculateCaustic()">Calculate</button>
-  <div class="result" id="causticOutput"></div>
 
-  <hr>
-  <h2>45% NaOH Top-up (Too Dilute Correction)</h2>
-  <div class="subheading">Add caustic to raise a weak solution</div>
-  <div class="form-grid">
-    <div class="input-box">
-      <label>Initial Tank Volume [L]</label>
-      <input type="number" id="topUpV1" value="2000">
+  <div id="causticDilutionSection">
+    <h2>Caustic Dilution Calc</h2>
+    <div class="form-grid">
+      <div class="input-box">
+        <label>2860-TNK-01 Level (Final) [L]</label>
+        <input type="number" id="hhLevel" value="2000">
+      </div>
+      <div class="input-box">
+        <label>2860-TNK-01 Current Level [L]</label>
+        <input type="number" id="currentLevel" value="800">
+      </div>
+      <div class="input-box">
+        <label>Target NaOH Strength (M)</label>
+        <input type="number" id="targetStrength" value="1.1">
+      </div>
+      <div class="input-box">
+        <label>Conc. NaOH (45%) [M]</label>
+        <input type="number" id="concStrength" value="14">
+      </div>
     </div>
-    <div class="input-box">
-      <label>Target NaOH Strength (M)</label>
-      <input type="number" id="topUpC2" value="1.1">
-    </div>
-    <div class="input-box">
-      <label>Conc. NaOH (45%) [M]</label>
-      <input type="number" id="topUpConc" value="14">
-    </div>
+    <button onclick="calculateCaustic()">Calculate</button>
+    <div class="result" id="causticOutput"></div>
   </div>
-  <button onclick="calculateTopUp()">Calculate</button>
-  <div class="result" id="topUpOutput"></div>
 
-  <hr>
-  <h2>Dilution: In Case It's Too Concentrated</h2>
-  <div class="subheading">Add water to reduce concentration</div>
-  <div class="form-grid">
-    <div class="input-box">
-      <label>Initial Tank Volume [L]</label>
-      <input type="number" id="concV1" value="2620">
+  <div id="topUpSection" style="display:none;">
+    <h2>Top-Up (Too Dilute Correction)</h2>
+    <div class="form-grid">
+      <div class="input-box">
+        <label>Initial Tank Volume [L]</label>
+        <input type="number" id="topUpV1" value="2000">
+      </div>
+      <div class="input-box">
+        <label>Target NaOH Strength (M)</label>
+        <input type="number" id="topUpC2" value="1.1">
+      </div>
+      <div class="input-box">
+        <label>Conc. NaOH (45%) [M]</label>
+        <input type="number" id="topUpConc" value="14">
+      </div>
     </div>
-    <div class="input-box">
-      <label>Initial NaOH Strength (M)</label>
-      <input type="number" id="concC1" value="2.83">
-    </div>
-    <div class="input-box">
-      <label>Target NaOH Strength (M)</label>
-      <input type="number" id="concC2" value="1.1">
-    </div>
+    <button onclick="calculateTopUp()">Calculate</button>
+    <div class="result" id="topUpOutput"></div>
   </div>
-  <button onclick="calculateTooConcentrated()">Calculate</button>
-  <div class="result" id="concOutput"></div>
-</div>.</p>
+
+  <div id="dilutionSection" style="display:none;">
+    <h2>Dilution (Too Concentrated)</h2>
+    <div class="form-grid">
+      <div class="input-box">
+        <label>Initial Tank Volume [L]</label>
+        <input type="number" id="concV1" value="2620">
+      </div>
+      <div class="input-box">
+        <label>Initial NaOH Strength (M)</label>
+        <input type="number" id="concC1" value="2.83">
+      </div>
+      <div class="input-box">
+        <label>Target NaOH Strength (M)</label>
+        <input type="number" id="concC2" value="1.1">
+      </div>
+    </div>
+    <button onclick="calculateTooConcentrated()">Calculate</button>
+    <div class="result" id="concOutput"></div>
+  </div>
 </div>
 
-
 <script>
+function toggleReagent() {
+  const reagent = document.getElementById("reagentSelect").value;
+  document.getElementById("sulfuricBlock").style.display = reagent === "sulfuric" ? "block" : "none";
+  document.getElementById("causticBlock").style.display = reagent === "caustic" ? "block" : "none";
+  document.getElementById("secondaryCausticSelect").style.display = reagent === "caustic" ? "block" : "none";
+  toggleCausticCalc();
+}
+
+function toggleCausticCalc() {
+  const selection = document.getElementById("causticCalcSelect").value;
+  document.getElementById("causticDilutionSection").style.display = selection === "causticDilution" ? "block" : "none";
+  document.getElementById("topUpSection").style.display = selection === "topUp" ? "block" : "none";
+  document.getElementById("dilutionSection").style.display = selection === "dilution" ? "block" : "none";
+}
+
 function calculateSulfuric() {
   const MW = 98.08;
   const V2 = parseFloat(document.getElementById("v2").value);
@@ -215,16 +213,21 @@ function calculateSulfuric() {
   const D1 = parseFloat(document.getElementById("d1").value);
   const P2 = parseFloat(document.getElementById("p2").value);
   const D2 = parseFloat(document.getElementById("d2").value);
-  if ([V2, P1, D1, P2, D2].some(v => isNaN(v) || v <= 0)) return;
+
   const C1 = ((P1 * 10) / MW) / (1 / D1);
   const C2 = ((P2 * 10) / MW) / (1 / D2);
   const V1 = (C2 * V2) / C1;
   const VH2O = V2 - V1;
-  document.getElementById("output").innerHTML = `<small><strong>Calculated Molarities:</strong><br>
-    C₁ = ${C1.toFixed(2)} M<br>C₂ = ${C2.toFixed(2)} M</small><br>
+
+  document.getElementById("output").innerHTML = `
+    <small><strong>Calculated Molarities:</strong><br>
+    C₁ = ${C1.toFixed(2)} M<br>
+    C₂ = ${C2.toFixed(2)} M</small><br>
     <small><strong>REQUIRED VOLUMES:</strong><br>
-    V (acid) = ${V1.toFixed(2)} L<br>V (water) = ${VH2O.toFixed(2)} L<br>
-    V (final) = ${V2.toFixed(2)} L</small>`;
+    V (acid) = ${V1.toFixed(2)} L (${P1}% H₂SO₄)<br>
+    V (water) = ${VH2O.toFixed(2)} L<br>
+    V (final) = ${V2.toFixed(2)} L</small>
+  `;
 }
 
 function calculateCaustic() {
@@ -235,10 +238,14 @@ function calculateCaustic() {
   const V1 = hhLevel - currentLevel;
   const V2 = (targetM * V1) / concM;
   const waterVol = V1 - V2;
-  const finalVol = currentLevel + V1;
-  document.getElementById("causticOutput").innerHTML = `<small><strong>REQUIRED VOLUMES:</strong><br>
-    V (caustic) = ${V2.toFixed(2)} L<br>V (water) = ${waterVol.toFixed(2)} L<br>
-    V (final) = ${finalVol.toFixed(2)} L</small>`;
+  const finalVol = V1 + currentLevel;
+
+  document.getElementById("causticOutput").innerHTML = `
+    <small><strong>REQUIRED VOLUMES:</strong><br>
+    V (caustic) = ${V2.toFixed(2)} L<br>
+    V (water) = ${waterVol.toFixed(2)} L<br>
+    V (final) = ${finalVol.toFixed(2)} L</small>
+  `;
 }
 
 function calculateTopUp() {
@@ -247,8 +254,12 @@ function calculateTopUp() {
   const Cconc = parseFloat(document.getElementById("topUpConc").value);
   const Vadd = (V1 * C2) / (Cconc - C2);
   const Vfinal = V1 + Vadd;
-  document.getElementById("topUpOutput").innerHTML = `<small><strong>REQUIRED ADDITION:</strong><br>
-    V (caustic) = ${Vadd.toFixed(2)} L<br>V (final) = ${Vfinal.toFixed(2)} L</small>`;
+
+  document.getElementById("topUpOutput").innerHTML = `
+    <small><strong>REQUIRED ADDITION:</strong><br>
+    V (caustic) = ${Vadd.toFixed(2)} L<br>
+    V (final) = ${Vfinal.toFixed(2)} L</small>
+  `;
 }
 
 function calculateTooConcentrated() {
@@ -257,10 +268,15 @@ function calculateTooConcentrated() {
   const C2 = parseFloat(document.getElementById("concC2").value);
   const V2 = (C1 * V1) / C2;
   const Vwater = V2 - V1;
-  document.getElementById("concOutput").innerHTML = `<small><strong>REQUIRED ADDITION:</strong><br>
-    V (caustic) = 0 L<br>V (water) = ${Vwater.toFixed(2)} L<br>V (final) = ${V2.toFixed(2)} L</small>`;
+
+  document.getElementById("concOutput").innerHTML = `
+    <small><strong>REQUIRED ADDITION:</strong><br>
+    V (caustic) = 0 L<br>
+    V (water) = ${Vwater.toFixed(2)} L<br>
+    V (final) = ${V2.toFixed(2)} L</small>
+  `;
 }
 </script>
+
 </body>
 </html>
-

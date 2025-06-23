@@ -23,7 +23,6 @@
     label {
       font-weight: bold;
       display: block;
-      margin-top: 15px;
     }
     input {
       padding: 6px;
@@ -32,9 +31,8 @@
     }
     .inline-group {
       display: flex;
-      gap: 40px;
-      margin-top: 10px;
-      align-items: flex-end;
+      justify-content: space-between;
+      margin-top: 15px;
     }
     .input-box {
       display: flex;
@@ -53,6 +51,8 @@
     .result small {
       font-size: 0.9em;
       color: #333;
+      display: block;
+      margin-bottom: 6px;
     }
     button {
       margin-top: 30px;
@@ -128,12 +128,12 @@
       document.getElementById("output").innerHTML = `
         <small><strong>Calculated Molarities:</strong><br>
         C₁ = ${C1.toFixed(2)} M (from ${P1}% @ ${D1} g/mL)<br>
-        C₂ = ${C2.toFixed(2)} M (from ${P2}% @ ${D2} g/mL)</small><br><br>
+        C₂ = ${C2.toFixed(2)} M (from ${P2}% @ ${D2} g/mL)</small><br>
 
-        <strong>REQUIRED VOLUMES:</strong><br>
-        V₁ = ${V1.toFixed(2)} L (${P1}% H₂SO₄)<br>
-        V₂ = ${VH2O.toFixed(2)} L (water)<br>
-        Vfinal = ${(V1 + VH2O).toFixed(2)} L
+        <small><strong>REQUIRED VOLUMES:</strong><br>
+        V₁ (acid) = ${V1.toFixed(2)} L (${P1}% H₂SO₄)<br>
+        V₂ (water) = ${VH2O.toFixed(2)} L<br>
+        Vfinal = ${(V1 + VH2O).toFixed(2)} L</small>
       `;
     }
   </script>

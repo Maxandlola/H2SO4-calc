@@ -21,14 +21,24 @@
       color: #666;
     }
     label {
+      font-weight: bold;
       display: block;
       margin-top: 15px;
-      font-weight: bold;
     }
     input {
       padding: 6px;
       margin-top: 5px;
-      width: 200px;
+      width: 180px;
+    }
+    .inline-group {
+      display: flex;
+      gap: 40px;
+      margin-top: 10px;
+      align-items: flex-end;
+    }
+    .input-box {
+      display: flex;
+      flex-direction: column;
     }
     .note {
       font-size: 0.85em;
@@ -45,7 +55,7 @@
       color: #333;
     }
     button {
-      margin-top: 20px;
+      margin-top: 30px;
       padding: 10px 20px;
       font-size: 16px;
     }
@@ -63,17 +73,27 @@
   <label>Final Volume (V₂ in L)</label>
   <input type="number" id="v2" value="1000">
 
-  <label>Concentrated Acid Strength (%) <span class="note">e.g. 97</span></label>
-  <input type="number" id="p1" value="97">
+  <div class="inline-group">
+    <div class="input-box">
+      <label>Concentrated Acid Strength (%)<br><span class="note">e.g. 97</span></label>
+      <input type="number" id="p1" value="97">
+    </div>
+    <div class="input-box">
+      <label>Concentrated Acid Density (g/mL)<br><span class="note">e.g. 1.84</span></label>
+      <input type="number" step="0.001" id="d1" value="1.84">
+    </div>
+  </div>
 
-  <label>Concentrated Acid Density (g/mL) <span class="note">e.g. 1.84</span></label>
-  <input type="number" step="0.001" id="d1" value="1.84">
-
-  <label>Target Acid Strength (%) <span class="note">e.g. 15</span></label>
-  <input type="number" id="p2" value="15">
-
-  <label>Target Acid Density (g/mL) <span class="note">e.g. 1.106</span></label>
-  <input type="number" step="0.001" id="d2" value="1.106">
+  <div class="inline-group">
+    <div class="input-box">
+      <label>Target Acid Strength (%)<br><span class="note">e.g. 15</span></label>
+      <input type="number" id="p2" value="15">
+    </div>
+    <div class="input-box">
+      <label>Target Acid Density (g/mL)<br><span class="note">e.g. 1.106</span></label>
+      <input type="number" step="0.001" id="d2" value="1.106">
+    </div>
+  </div>
 
   <button onclick="calculate()">Calculate</button>
 

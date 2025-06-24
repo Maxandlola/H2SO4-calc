@@ -386,11 +386,7 @@ function calculateLime() {
   const volume = parseFloat(document.getElementById("limeVolume").value);
   const mass = (target * volume) / 100;
   document.getElementById("limeOutput").innerHTML = `
-    <small>
-      Target % Solids (w/v) = ${target}%<br>
-      Volume of water to add (L): ${volume} L<br>
-      Mass of Lime Bags (kg): = ${target} * ${volume} / 100 = ${mass.toFixed(2)} kg
-    </small>`;
+    <strong>Mass of Lime Bags</strong> = ${mass.toFixed(2)} kg`;
 }
 
 function calculateLimestone() {
@@ -398,11 +394,7 @@ function calculateLimestone() {
   const volume = parseFloat(document.getElementById("limestoneVolume").value);
   const mass = (target * volume) / 100;
   document.getElementById("limestoneOutput").innerHTML = `
-    <small>
-      Target % Solids (w/v) = ${target}%<br>
-      Volume of water to add (L): ${volume} L<br>
-      Mass of Limestone Bags (kg): = ${target} * ${volume} / 100 = ${mass.toFixed(2)} kg
-    </small>`;
+    <strong>Mass of Limestone Bags</strong> = ${mass.toFixed(2)} kg`;
 }
 
 function calculateNaHS() {

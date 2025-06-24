@@ -103,11 +103,12 @@
 </head>
 <body>
 <h1>Reagent Mixing/Make-up Calculator</h1>
-<label for="reagentSelect"><strong>Reagent:</strong></label><div id="sdsLinks" style="margin-top:20px;"></div>
+<label for="reagentSelect"><strong>Reagent:</strong></label>
 <select id="reagentSelect" onchange="toggleReagent()">
 <option value="sulfuric">Sulfuric Acid</option>
 <option value="caustic">Caustic (NaOH)</option>
-</select>
+<option value="lime">Lime</option><option value="limestone">Limestone</option>
+<option value="nahs">NaHS</option></select>
 <div id="secondaryCausticSelect" style="display:none;">
 <label for="causticCalcSelect"><strong>Caustic Calculation Type:</strong></label>
 <select id="causticCalcSelect" onchange="toggleCausticCalc()">
@@ -207,6 +208,59 @@
 <div class="result" id="concOutput"></div>
 </div>
 </div>
+<div id="limeBlock" style="display:none;">
+<h2>Lime Mixing</h2>
+<div class="form-grid">
+<div class="input-box">
+<label>Target % Solids (w/v)</label>
+<input id="limeTarget" type="number" value="5"/>
+</div>
+<div class="input-box">
+<label>Volume of water to add (L)</label>
+<input id="limeVolume" type="number" value="1000"/>
+</div>
+</div>
+<button onclick="calculateLime()">Calculate</button>
+<div class="result" id="limeOutput"></div>
+</div>
+
+<div id="limestoneBlock" style="display:none;">
+<h2>Limestone Mixing</h2>
+<div class="form-grid">
+<div class="input-box">
+<label>Target % Solids (w/v)</label>
+<input id="limestoneTarget" type="number" value="5"/>
+</div>
+<div class="input-box">
+<label>Volume of water to add (L)</label>
+<input id="limestoneVolume" type="number" value="1000"/>
+</div>
+</div>
+<button onclick="calculateLimestone()">Calculate</button>
+<div class="result" id="limestoneOutput"></div>
+</div>
+
+
+<div id="nahsBlock" style="display:none;">
+<h2>NaHS Dilution</h2>
+<div class="form-grid">
+  <div class="input-box">
+    <label>Polycan Volume (L)</label>
+    <input id="nahsPolycan" type="number" value="25" />
+  </div>
+  <div class="input-box">
+    <label>Concentrated NaHS Strength (%)</label>
+    <input id="nahsConc" type="number" value="30" />
+  </div>
+  <div class="input-box">
+    <label>Target NaHS Strength (%)</label>
+    <input id="nahsTarget" type="number" value="5" />
+  </div>
+</div>
+<button onclick="calculateNaHS()">Calculate</button>
+<div class="result" id="nahsOutput"></div>
+</div>
+
 <script>
 function toggleReagent() {
   const reagent = document.getElementById("reagentSelect").value;
@@ -214,6 +268,11 @@ function toggleReagent() {
   document.getElementById("causticBlock").style.display = reagent === "caustic" ? "block" : "none";
   document.getElementById("secondaryCausticSelect").style.display = reagent === "caustic" ? "block" : "none";
   toggleCausticCalc();
+  document.getElementById("limeBlock").style.display = reagent === "lime" ? "block" : "none";
+  document.getElementById("limestoneBlock").style.display = reagent === "limestone" ? "block" : "none";
+  
+  document.getElementById("nahsBlock").style.display = reagent === "nahs" ? "block" : "none";
+
 }
 
 function toggleCausticCalc() {
@@ -293,6 +352,46 @@ function calculateTooConcentrated() {
     V (final) = ${V2.toFixed(2)} L</small>
   `;
 }
+
+
+
+function calculateLime() {
+  const target = parseFloat(document.getElementById("limeTarget").value);
+  const volume = parseFloat(document.getElementById("limeVolume").value);
+  const mass = (target * volume) / 100;
+  document.getElementById("limeOutput").innerHTML = `
+    <small>
+      Target % Solids (w/v) = ${target}%<br>
+      Volume of water to add (L): ${volume} L<br>
+      Mass of Lime Bags (kg): = ${target} * ${volume} / 100 = ${mass.toFixed(2)} kg
+    </small>`;
+}
+
+function calculateLimestone() {
+  const target = parseFloat(document.getElementById("limestoneTarget").value);
+  const volume = parseFloat(document.getElementById("limestoneVolume").value);
+  const mass = (target * volume) / 100;
+  document.getElementById("limestoneOutput").innerHTML = `
+    <small>
+      Target % Solids (w/v) = ${target}%<br>
+      Volume of water to add (L): ${volume} L<br>
+      Mass of Limestone Bags (kg): = ${target} * ${volume} / 100 = ${mass.toFixed(2)} kg
+    </small>`;
+}
+
+function calculateNaHS() {
+  const V = parseFloat(document.getElementById("nahsPolycan").value);
+  const C = parseFloat(document.getElementById("nahsConc").value);
+  const T = parseFloat(document.getElementById("nahsTarget").value);
+  const Vwater = ((V * C) / T) - V;
+
+  document.getElementById("nahsOutput").innerHTML = `
+    <small><strong>REQUIRED VOLUMES:</strong><br>
+    V (NaHS) = ${V.toFixed(2)} L<br>
+    V (water) = ${Vwater.toFixed(2)} L</small>
+  `;
+}
+
 </script>
 <script>
 function updateSDSLink() {
@@ -310,5 +409,90 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("reagentSelect").addEventListener("change", updateSDSLink);
   updateSDSLink();
 });
-</script></body>
+</script>
+</div>
+
+<div id="importantNotes" style="margin-top:50px;"></div>
+
+<script>
+function updateImportantNotes() {
+  const reagent = document.getElementById("reagentSelect").value;
+  const notesDiv = document.getElementById("importantNotes");
+  let html = '<h2>⚠️ Important Notes</h2>';
+
+  switch (reagent) {
+    case "nahs":
+      html += `<p><strong>NaHS Dilution:</strong><br>
+      Adding water to concentrated NaHS is exothermic and must be done carefully.<br>
+      Add water slowly while using appropriate PPE.<br>
+      Conduct the dilution under a fume hood or in a well-ventilated, controlled environment to minimize exposure to H₂S vapors.</p>`;
+      break;
+    case "caustic":
+      html += `<p><strong>Mixing NaOH (Sodium Hydroxide) with Water:</strong><br>
+      Highly exothermic reaction: Adding water to solid NaOH or concentrated NaOH solution releases a large amount of heat, which can cause boiling, splattering, or even explosive ejection of caustic solution.<br><br>
+      Always add NaOH to water, never the reverse: This ensures the water absorbs the heat gradually. Do not pour water onto NaOH, as this may cause violent reactions.<br><br>
+      Use appropriate PPE: Wear chemical-resistant gloves, face shield, safety goggles, and lab coat or apron.<br>
+      Dilute slowly with stirring in a chemical-resistant container.<br>
+      Preferably conduct under a fume hood or in a ventilated area to avoid inhalation of corrosive vapors.<br>
+      Plastic or glass containers rated for heat and alkali are recommended.</p>`;
+      break;
+    case "sulfuric":
+      html += `<p><strong>Mixing H₂SO₄ (Sulfuric Acid) with Water:</strong><br>
+      Violently exothermic reaction: Concentrated sulfuric acid reacts very vigorously with water, releasing significant heat, which can cause splattering, boiling, or even explosion.<br><br>
+      Always add acid to water (AAW): Add acid to water slowly while stirring constantly. Never add water to acid, as this causes rapid vaporization and may lead to dangerous splashing.<br><br>
+      Use appropriate PPE: Wear acid-resistant gloves, face shield, chemical goggles, and acid apron or coat.<br>
+      Only use glass or acid-resistant plastic containers, not metal.<br>
+      Dilution must be done slowly and in stages, especially with concentrated (>90%) H₂SO₄.<br>
+      Preferably perform in a fume hood or outdoor chemical-safe area due to release of acid vapors (especially with hot acid).</p>`;
+      break;
+    case "limestone":
+      html += `<p><strong>Mixing Limestone (CaCO₃) with Water:</strong><br>
+      Limestone (CaCO₃) is sparingly soluble in water.<br><br>
+      It does not react violently with water — no exothermic heat is generated.<br><br>
+      Used as a buffer, neutralizing agent, or reagent in acidic environments, particularly in metallurgical effluent treatment.<br><br>
+      May cause dust irritation if handled in powder form — avoid inhalation.<br>
+      Wear basic PPE: gloves, dust mask or respirator (for powder), goggles.<br><br>
+      Mixing produces a suspension or slurry, not a solution.<br>
+      Settling may occur, so continuous agitation is required in process vessels.<br>
+      ✅ No significant thermal hazard during mixing.</p>`;
+      break;
+    case "lime":
+      html += `<p><strong>Mixing Hydrated Lime with Water</strong></p>
+      <p><strong>💥 Reaction Type:</strong><br>
+      Slightly exothermic when mixed with water, but much milder than quicklime (CaO).<br>
+      Does not cause boiling or splattering, but releases some heat.</p>
+      <p><strong>💧 Solubility:</strong><br>
+      Very low solubility in water: ~1.5 g/L at 25°C.<br>
+      Forms a saturated solution known as limewater (clear), and excess remains as suspended solids (slurry).<br>
+      Settles rapidly without agitation → requires mechanical or pneumatic mixing to maintain uniformity.</p>
+      <p><strong>🧷 Safety and Handling Precautions</strong><br>
+      - Dust inhalation: Fine powder can irritate nose, throat, lungs — use dust mask or respirator<br>
+      - Eye contact: Causes serious eye damage — wear sealed goggles or face shield<br>
+      - Skin contact: May cause dryness, irritation, or burns on prolonged exposure<br>
+      - Ingestion: Harmful if swallowed<br>
+      - Reactivity: Milder than CaO; still generates heat, especially in large batches</p>
+      <p><strong>✅ PPE Requirements:</strong><br>
+      Dust mask or half-face respirator, Chemical goggles or face shield, Nitrile or rubber gloves, Long-sleeved coveralls, Safety boots</p>
+      <p><strong>🧃 Practical Guidelines for Slurry Preparation:</strong><br>
+      Use clean, cold water — warm water increases dissolution but may affect stability.<br>
+      Add lime slowly to water with agitation.<br>
+      DO NOT add water to a large mass of lime — risk of localized caking or hardening.<br>
+      Ensure continuous stirring to prevent settling if slurry is stored.<br>
+      Prepare fresh slurry if possible — lime suspensions degrade (carbonate) when exposed to air.</p>`;
+      break;
+    default:
+      html = "";
+  }
+
+  notesDiv.innerHTML = html;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("reagentSelect").addEventListener("change", updateImportantNotes);
+  updateImportantNotes();
+});
+</script>
+</body>
+
 </html>
+

@@ -4,102 +4,128 @@
 <html lang="en">
 <head>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
 <style>
-    body {
-      max-width: 100%;
-      padding: 10px;
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
-    input, select, button {
-      max-width: 100%;
-      width: 100%;
-      box-sizing: border-box;
-    }
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 0;
+    max-width: 100%;
+  }
+  h1, h2 {
+    color: #333;
+    font-size: clamp(1.5rem, 2vw, 2rem);
+  }
+  label {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  input, select, button {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    box-sizing: border-box;
+    font-size: 1rem;
+  }
+  .form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .input-box {
+    display: flex;
+    flex-direction: column;
+  }
+  .result, #importantNotes {
+    margin-top: 30px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-left: 5px solid #ccc;
+    font-size: 0.95rem;
+  }
+  button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+  @media (min-width: 768px) {
     .form-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
+      flex-direction: row;
+      flex-wrap: wrap;
     }
     .input-box {
-      width: 100%;
+      flex: 1 1 45%;
     }
-    .result {
-      word-wrap: break-word;
-    }
-  </style>
+  }
+</style>
+
 <meta charset="utf-8"/>
 <title>Reagent Mixing/Make-up Calculator</title>
+
 <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 30px;
-      max-width: 960px;
-    }
-    h2 {
-      border-bottom: 2px solid #444;
-      padding-bottom: 5px;
-      font-size: 18px;
-    }
-    .subheading {
-      font-weight: normal;
-      font-size: 1rem;
-      margin-top: -10px;
-      margin-bottom: 15px;
-      color: #666;
-    }
-    label {
-      font-weight: bold;
-      display: block;
-    }
-    input {
-      padding: 6px;
-      margin-top: 5px;
-      width: 200px;
-    }
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 0;
+    max-width: 100%;
+  }
+  h1, h2 {
+    color: #333;
+    font-size: clamp(1.5rem, 2vw, 2rem);
+  }
+  label {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  input, select, button {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    box-sizing: border-box;
+    font-size: 1rem;
+  }
+  .form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .input-box {
+    display: flex;
+    flex-direction: column;
+  }
+  .result, #importantNotes {
+    margin-top: 30px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-left: 5px solid #ccc;
+    font-size: 0.95rem;
+  }
+  button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+  @media (min-width: 768px) {
     .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      column-gap: 60px;
-      row-gap: 15px;
-      margin-top: 15px;
-      align-items: start;
+      flex-direction: row;
+      flex-wrap: wrap;
     }
     .input-box {
-      display: flex;
-      flex-direction: column;
+      flex: 1 1 45%;
     }
-    .note {
-      font-size: 0.85em;
-      color: #555;
-    }
-    .result {
-      margin-top: 20px;
-      padding: 15px;
-      border: 1px solid #ccc;
-      background-color: #f4f4f4;
-    }
-    .result small {
-      font-size: 0.9em;
-      color: #333;
-      display: block;
-      margin-bottom: 6px;
-    }
-    button {
-      margin-top: 30px;
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-    }
-    select {
-      padding: 6px;
-      font-size: 16px;
-      width: 250px;
-      margin-bottom: 20px;
-    }
-  </style>
+  }
+</style>
+
 </head>
 <body>
 <h1>Reagent Mixing/Make-up Calculator</h1>
